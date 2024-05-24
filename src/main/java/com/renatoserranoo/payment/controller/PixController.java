@@ -17,7 +17,7 @@ public class PixController {
 
     @CrossOrigin(origins = "*")
     @GetMapping
-    public ResponseEntity pixCreateEVP(){
+    public ResponseEntity<String> pixCreateEVP(){
         JSONObject response = this.pixService.pixCreateEVP();
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -26,11 +26,10 @@ public class PixController {
 
     @CrossOrigin(origins = "*")
     @PostMapping
-    public ResponseEntity pixCreateCharge(@RequestBody PixChargeRequest pixChargeRequest){
+    public ResponseEntity<String> pixCreateCharge(@RequestBody PixChargeRequest pixChargeRequest){
         JSONObject response = this.pixService.pixCreateCharge(pixChargeRequest);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response.toString());
     }
-
 }

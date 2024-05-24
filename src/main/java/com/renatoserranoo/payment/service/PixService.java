@@ -9,10 +9,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.io.ByteArrayInputStream;
-import java.io.File;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,9 +61,14 @@ public class PixService {
             JSONObject response = efi.call("pixCreateImmediateCharge", new HashMap<String,String>(), body);
 
             int idFromJson = response.getJSONObject("loc").getInt("id");
-            pixGenerateQRCode(String.valueOf(idFromJson));
+            byte[] qrCodeImage = pixGenerateQRCode(String.valueOf(idFromJson));
 
+            if (qrCodeImage != null) {
+                String base64QRCode = Base64.getEncoder().encodeToString(qrCodeImage);
+                response.put("imagemQrcode", base64QRCode);
+            }
             return response;
+
         }catch (EfiPayException e){
             System.out.println(e.getError());
             System.out.println(e.getErrorDescription());
@@ -77,33 +79,18 @@ public class PixService {
         return null;
     }
 
-    private void pixGenerateQRCode(String id){
+    private byte[] pixGenerateQRCode(String id) throws EfiPayException, Exception{
 
         JSONObject options = configuringJsonObject();
 
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("id", id);
 
-        try {
-            EfiPay efi= new EfiPay(options);
-            Map<String, Object> response = efi.call("pixGenerateQRCode", params, new HashMap<String, Object>());
+        EfiPay efi= new EfiPay(options);
+        Map<String, Object> response = efi.call("pixGenerateQRCode", params, new HashMap<String, Object>());
 
-            System.out.println(response);
-
-            File outputfile = new File("qrCodeImage.png");
-            ImageIO.write(ImageIO.read(new ByteArrayInputStream(javax.xml.bind.DatatypeConverter.parseBase64Binary
-                    (((String) response.get("imagemQrcode")).split(",")[1]))), "png", outputfile);
-
-            Desktop desktop = Desktop.getDesktop();
-            desktop.open(outputfile);
-
-        }catch (EfiPayException e){
-            System.out.println(e.getError());
-            System.out.println(e.getErrorDescription());
-        }
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        String base64Image = ((String) response.get("imagemQrcode")).split(",")[1];
+        return Base64.getDecoder().decode(base64Image);
     }
 
     private JSONObject configuringJsonObject(){
