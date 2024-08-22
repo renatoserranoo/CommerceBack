@@ -14,8 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.util.Arrays;
-
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -33,6 +31,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/v1/user/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/user/verify").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/products").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .cors(withDefaults())

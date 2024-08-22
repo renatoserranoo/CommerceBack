@@ -1,6 +1,8 @@
 package com.renatoserranoo.payment.entity;
 
 import jakarta.persistence.*;
+
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +14,7 @@ import java.util.Collection;
 @Setter
 @Entity(name = "users")
 @Table(name = "users")
+@EqualsAndHashCode(of = "id")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -22,14 +25,17 @@ public class User implements UserDetails {
     private String verificationCode;
     private boolean enabled;
     private String role;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Cart cart;
 
-    public User(Long id, String name, String email, String password, String verificationCode, boolean enabled) {
+    public User(Long id, String name, String email, String password, String verificationCode, boolean enabled, Cart cart) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.verificationCode = verificationCode;
         this.enabled = enabled;
+        this.cart = cart;
     }
 
     public User(String name, String email, String password) {
