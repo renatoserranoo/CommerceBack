@@ -38,16 +38,21 @@ public class ProductController {
         return ResponseEntity.ok(productService.findAll());
     }
 
+    @GetMapping("/search")
+    public List<Product> searchProducts(@RequestParam String query) {
+        return productService.searchProducts(query);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
 
+    @CrossOrigin(origins = "*")
     @PutMapping
     public ResponseEntity<Product> update(@RequestBody ProductRequest product){
         Product productUpdated = productService.updateProduct(product);
         return ResponseEntity.ok(productUpdated);
     }
-
 }

@@ -26,6 +26,14 @@ public class CartController {
         return ResponseEntity.ok(updatedCart);
     }
 
+    @PostMapping("/sync")
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<List<CartResponse>> syncCart(@RequestBody List<CartItemRequest> cartItemRequest, Authentication authentication) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        List<CartResponse> updatedCart = cartService.syncCart(userId, cartItemRequest);
+        return ResponseEntity.ok(updatedCart);
+    }
+
     @GetMapping
     @CrossOrigin(origins = "*")
     public ResponseEntity<List<CartResponse>> getCart(Authentication authentication) {

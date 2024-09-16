@@ -44,7 +44,7 @@ public class CartService {
         if (cart == null) {
             cart = new Cart();
             cart.setUser(user);
-            cartRepository.save(cart);  // Salva o novo carrinho
+            cartRepository.save(cart);
         }
 
         Product product = productRepository.findById(cartItemRequest.productId())
@@ -53,6 +53,33 @@ public class CartService {
         CartItem newItem = cartItemRequest.toCartItem(product, cart);
 
         cart.addItem(newItem);
+
+        Cart updatedCart = cartRepository.save(cart);
+
+        return updatedCart.getItems().stream()
+                .map(item -> new CartResponse(item.getId(), item.getProduct(), item.getQuantity()))
+                .collect(Collectors.toList());
+    }
+
+    public List<CartResponse> syncCart(Long userId, List<CartItemRequest> cartItemsRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Cart cart = user.getCart();
+        if (cart == null) {
+            cart = new Cart();
+            cart.setUser(user);
+            cartRepository.save(cart);
+        }
+
+        for (CartItemRequest cartItemRequest : cartItemsRequest){
+            Product product = productRepository.findById(cartItemRequest.productId())
+                    .orElseThrow(() -> new RuntimeException("Product not found"));
+
+            CartItem newItem = cartItemRequest.toCartItem(product, cart);
+
+            cart.addItem(newItem);
+        }
 
         Cart updatedCart = cartRepository.save(cart);
 

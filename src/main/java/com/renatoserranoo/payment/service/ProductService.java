@@ -16,7 +16,7 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public Product saveProduct(@RequestBody ProductRequest data){
+    public Product saveProduct(ProductRequest data){
         Product productData = new Product(data);
         return productRepository.save(productData);
     }
@@ -29,11 +29,15 @@ public class ProductService {
         return productRepository.findAll().stream().map(ProductResponse::new).toList();
     }
 
+    public List<Product> searchProducts(String query) {
+        return productRepository.findByTitleContainingIgnoreCase(query);
+    }
+
     public void deleteProduct(Long id){
         productRepository.deleteById(id);
     }
 
-    public Product updateProduct(@RequestBody ProductRequest data){
+    public Product updateProduct(ProductRequest data){
         Product productData = new Product(data);
         return productRepository.save(productData);
     }

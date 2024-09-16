@@ -1,6 +1,7 @@
 package com.renatoserranoo.payment.dto;
 
 import com.renatoserranoo.payment.entity.User;
+import com.renatoserranoo.payment.entity.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -18,10 +19,12 @@ public record UserRequest(
         @NotNull(message = "Senha não pode ser nula.")
         @NotBlank(message = "Senha não pode ser vazia.")
         @Size(min = 8, message = "A senha deve conter no minimo 8 caracteres.")
-        String password) {
+        String password,
+        UserRole role) {
 
     public User toModel(){
-        return new User(name,email,password);
+        UserRole userRole = (role != null) ? role : UserRole.USER;
+        return new User(name,email,password,userRole);
     }
 
 }

@@ -20,22 +20,26 @@ public class Product {
     private Double price;
     private String description;
     private String image;
+    private String category;
 
-    public Product(Long id, String title, Double price, String description, String image) {
+    public Product(Long id, String title, Double price, String description, String image, String category) {
         this.id = id;
         this.title = title;
         this.price = price;
         this.description = description;
         this.image = image;
+        this.category = category;
     }
 
     public Product() {
     }
 
     public Product(ProductRequest data) {
+        this.id = data.id();
         this.title = data.title();
         this.price = data.price();
         this.description = data.description();
         this.image = data.image();
+        this.category = data.category();
     }
 }
