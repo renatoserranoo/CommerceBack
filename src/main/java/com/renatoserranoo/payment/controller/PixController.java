@@ -24,10 +24,9 @@ public class PixController {
                 .body(response.toString());
     }
 
-    @CrossOrigin(origins = "*")
     @PostMapping
     public ResponseEntity<String> pixCreateCharge(@RequestBody PixChargeRequest pixChargeRequest){
-        JSONObject response = this.pixService.pixCreateCharge(pixChargeRequest);
+        JSONObject response = pixService.pixCreateCharge(pixChargeRequest);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response.toString());

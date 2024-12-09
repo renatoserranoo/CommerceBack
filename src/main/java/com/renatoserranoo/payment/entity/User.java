@@ -26,19 +26,21 @@ public class User implements UserDetails {
     private String password;
     private String verificationCode;
     private boolean enabled;
+    private String provider;
     @Enumerated(EnumType.STRING)
     private UserRole role;
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Cart cart;
 
     public User(Long id, String name, String email, String password, String verificationCode, boolean enabled,
-                Cart cart, UserRole role) {
+                String provider, Cart cart, UserRole role) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.verificationCode = verificationCode;
         this.enabled = enabled;
+        this.provider = provider;
         this.cart = cart;
         this.role = role;
     }
